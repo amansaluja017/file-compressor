@@ -1,11 +1,15 @@
+import { Link, useNavigate } from "react-router";
+
 function Header() {
+  const navigate = useNavigate();
+
   return (
     <div className="relative bg-base-100 w-full top-0 z-50">
       <div className="navbar bg-transparent shadow-sm">
         <div className="flex-1">
-          <a className="btn btn-ghost text-xl">daisyUI</a>
+          <a className="btn btn-ghost text-xl">Image modifier</a>
         </div>
-        <div className="flex gap-2">
+        {/* <div className="flex gap-2">
           <div className="dropdown dropdown-end">
             <div
               tabIndex={0}
@@ -34,6 +38,10 @@ function Header() {
               </li>
             </ul>
           </div>
+        </div> */}
+        <div className="gap-5 flex">
+          <Link to='/login' className="btn btn-outline btn-info">Login</Link>
+          <Link to='/signup' className="btn btn-outline btn-success">Signup</Link>
         </div>
       </div>
     </div>
