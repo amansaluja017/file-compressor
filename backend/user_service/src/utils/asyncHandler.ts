@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from "express"
 
 
-const asyncHandler = (handler: (
+const asyncHandler = async (handler: (
     req: Request, res: Response, next: NextFunction
 ) => ReturnType<any> ) => {
     async (req: Request, res: Response, next: NextFunction) => {
