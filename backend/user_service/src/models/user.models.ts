@@ -53,7 +53,7 @@ export interface IUser extends mongoose.Document {
     isVerified: boolean;
     accessToken: string | null;
     refreshToken: string | null;
-    comparePassword(password: string | Buffer): Promise<boolean>;
+    comparePassword: (password: string | Buffer) => Promise<boolean>;
     gernateAccessToken(): Promise<string>;
     gernateRefreshToken(): Promise<string>;
 }

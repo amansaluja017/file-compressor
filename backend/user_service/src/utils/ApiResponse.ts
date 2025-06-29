@@ -3,7 +3,7 @@ export class ApiResponse {
     private data: any
     private message: String
 
-    constructor (status: 200, data: null, message: "success") {
+    constructor (status: number, data: any = " " , message: string) {
         this.status = status,
         this.data = data,
         this.message = message
