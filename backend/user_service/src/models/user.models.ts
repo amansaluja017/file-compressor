@@ -39,11 +39,11 @@ userSchema.methods.comparePassword = async function(password: string | Buffer) {
 }
 
 userSchema.methods.gernateAccessToken = async function() {
-    return await jwt.sign({id: this._id}, process.env.ACCESS_TOKEN_SECRET! as string, {expiresIn: "1d"})
+    return await jwt.sign({id: this._id}, process.env.SECRET! as string, {expiresIn: "1d"})
 }
 
 userSchema.methods.gernateRefreshToken = async function() {
-    return await jwt.sign({id: this._id}, process.env.REFRESH_TOKEN_SECRET! as string, {expiresIn: "7d"})
+    return await jwt.sign({id: this._id}, process.env.SECRET! as string, {expiresIn: "7d"})
 }
 
 export interface IUser extends mongoose.Document {

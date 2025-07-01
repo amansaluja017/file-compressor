@@ -52,6 +52,8 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 export const login = asyncHandler(async (req: Request, res: Response) => {
     const {email, password} = req.body;
 
+    console.log(email, password);
+
     if(!email || !password) {
         throw new ApiError(404, "Please enter email and password")
     }

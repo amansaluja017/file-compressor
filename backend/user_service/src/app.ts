@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import path from "path";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import connect from "./services/rabbit";
 
 dotenv.config();
 
@@ -18,8 +19,10 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())
 
+connect();
+
 import userRoutes from "./routes/user.route";
 
-app.use("/api/v1/user", userRoutes);
+app.use("/", userRoutes);
 
 export default app;

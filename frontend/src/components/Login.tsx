@@ -1,4 +1,29 @@
+import { useForm } from "react-hook-form";
+import axios from "axios";
+
 function Login() {
+  const { register, handleSubmit } = useForm();
+
+  const submit = async (data: any) => {
+    console.log("Form submitted with data:", data);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/users/login`,
+        data,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if(response.status === 200)  {
+        console.log(response.data.data)
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      // Handle error (e.g., show a notification or alert)
+    }
+  };
+
   return (
     <div className="h-full flex justify-center items-center">
       <div className="p-8">
@@ -9,7 +34,7 @@ function Login() {
           <div>
             <h1 className="text-2xl font-bold">Login</h1>
           </div>
-          <form autoComplete="on">
+          <form onSubmit={handleSubmit(submit)} autoComplete="on">
             <div className="h-full rounded-md flex flex-col gap-1 p-4">
               <label htmlFor="email">Email</label>
               <input
@@ -19,6 +44,13 @@ function Login() {
                 type="email"
                 required
                 placeholder="mail@site.com"
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: "Invalid email address",
+                  },
+                })}
               />
               <label htmlFor="password">Password</label>
               <input
@@ -31,10 +63,13 @@ function Login() {
                 min="8"
                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                 title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
+                {...register("password", {
+                  required: "Password is required",
+                })}
               />
 
               <div className="mt-10">
-                <button className="btn btn-soft btn-success">Login</button>
+                <button type="submit" className="btn btn-soft btn-success">Login</button>
               </div>
             </div>
           </form>

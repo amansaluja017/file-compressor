@@ -1,4 +1,29 @@
+import {useForm} from "react-hook-form"
+import axios from "axios";
+
 function Signup() {
+  const {register, handleSubmit} = useForm();
+
+   const submit = async (data: any) => {
+    console.log("Form submitted with data:", data);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/users/register`,
+        data,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("Response:", response);
+
+      if(response.status === 201)  {
+        console.log(response.data.data)
+      }
+    } catch (error) {
+      console.error("signup failed:", error);
+    }
+  };
+
   return (
     <div className="h-full flex justify-center items-center">
       <div className="p-8">
@@ -9,7 +34,7 @@ function Signup() {
           <div>
             <h1 className="text-2xl font-bold">Signup</h1>
           </div>
-          <form autoComplete="on">
+          <form onSubmit={handleSubmit(submit)} autoComplete="on">
             <div className="h-full rounded-md flex flex-col gap-1 p-4">
               <label htmlFor="email">Name</label>
               <input
@@ -19,6 +44,9 @@ function Signup() {
                 type="text"
                 required
                 placeholder="John doe"
+                {...register("name", {
+                  required: true
+                })}
               />
               <label htmlFor="email">Email</label>
               <input
@@ -28,6 +56,9 @@ function Signup() {
                 type="email"
                 required
                 placeholder="mail@site.com"
+                {...register("email", {
+                  required: true
+                })}
               />
               <label htmlFor="password">Password</label>
               <input
@@ -40,6 +71,9 @@ function Signup() {
                 min="8"
                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                 title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
+                {...register("password", {
+                  required: true
+                })}
               />
               <p className="validator-hint">
                 Must be more than 8 characters, including
@@ -52,7 +86,7 @@ function Signup() {
               </p>
 
               <div className="">
-                <button className="btn btn-soft btn-success">signup</button>
+                <button type="submit" className="btn btn-soft btn-success">signup</button>
               </div>
             </div>
           </form>
