@@ -1,12 +1,21 @@
-import {useForm} from "react-hook-form"
+import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { signup } from "../store/Slice";
+import { useNavigate } from "react-router";
 
 function Signup() {
-  const {register, handleSubmit} = useForm();
+  const { register, handleSubmit } = useForm();
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
-   const submit = async (data: any) => {
-    console.log("Form submitted with data:", data);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const submit = async (data: any) => {
     try {
+      setLoading(true);
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/users/register`,
         data,
@@ -14,13 +23,21 @@ function Signup() {
           withCredentials: true,
         }
       );
-      console.log("Response:", response);
 
-      if(response.status === 201)  {
-        console.log(response.data.data)
+      if (response.status === 201) {
+        console.log(response.data.data);
+        dispatch(signup(response.data.data));
+        navigate("/home");
       }
-    } catch (error) {
+    } catch (error: any) {
+      if (error.status === 402) {
+        setError("This email is already exists, please login or try different one");
+      } else {
+        setError("Internal server error, please try again some time")
+      }
       console.error("signup failed:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -34,7 +51,13 @@ function Signup() {
           <div>
             <h1 className="text-2xl font-bold">Signup</h1>
           </div>
-          <form onSubmit={handleSubmit(submit)} autoComplete="on">
+          <form
+            onChange={(e) => {
+              e.preventDefault();
+              setError("");
+            }}
+            onSubmit={handleSubmit(submit)}
+            autoComplete="on">
             <div className="h-full rounded-md flex flex-col gap-1 p-4">
               <label htmlFor="email">Name</label>
               <input
@@ -45,7 +68,7 @@ function Signup() {
                 required
                 placeholder="John doe"
                 {...register("name", {
-                  required: true
+                  required: true,
                 })}
               />
               <label htmlFor="email">Email</label>
@@ -57,7 +80,7 @@ function Signup() {
                 required
                 placeholder="mail@site.com"
                 {...register("email", {
-                  required: true
+                  required: true,
                 })}
               />
               <label htmlFor="password">Password</label>
@@ -72,7 +95,7 @@ function Signup() {
                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                 title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
                 {...register("password", {
-                  required: true
+                  required: true,
                 })}
               />
               <p className="validator-hint">
@@ -85,8 +108,12 @@ function Signup() {
                 At least one uppercase letter
               </p>
 
+              <p className="text-sm text-red-500 mb-2 font-serif">{error}</p>
+
               <div className="">
-                <button type="submit" className="btn btn-soft btn-success">signup</button>
+                <button type="submit" className="btn btn-soft btn-success">
+                  signup
+                </button>
               </div>
             </div>
           </form>

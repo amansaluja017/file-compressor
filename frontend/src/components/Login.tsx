@@ -1,12 +1,21 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { login } from "../store/Slice";
+import { useNavigate } from "react-router";
 
 function Login() {
   const { register, handleSubmit } = useForm();
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const submit = async (data: any) => {
-    console.log("Form submitted with data:", data);
     try {
+      setLoading(true);
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/users/login`,
         data,
@@ -17,10 +26,20 @@ function Login() {
 
       if(response.status === 200)  {
         console.log(response.data.data)
+        dispatch(login(response.data.data));
+        navigate("/home");
       }
-    } catch (error) {
+    } catch (error: any) {
+      if(error.status === 404) {
+        setError("Please enter a register email")
+      } else if (error.status === 401) {
+        setError("Password is incorrect")
+      } else {
+        setError("Internal server error, please try again after some time")
+      }
       console.error("Login failed:", error);
-      // Handle error (e.g., show a notification or alert)
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -34,7 +53,10 @@ function Login() {
           <div>
             <h1 className="text-2xl font-bold">Login</h1>
           </div>
-          <form onSubmit={handleSubmit(submit)} autoComplete="on">
+          <form onChange={(e) => {
+            e.preventDefault();
+            setError("");
+          }} onSubmit={handleSubmit(submit)} autoComplete="on">
             <div className="h-full rounded-md flex flex-col gap-1 p-4">
               <label htmlFor="email">Email</label>
               <input
@@ -60,13 +82,11 @@ function Login() {
                 className="input validator rounded-md"
                 required
                 placeholder="Password"
-                min="8"
-                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
                 {...register("password", {
                   required: "Password is required",
                 })}
               />
+              <p className="text-red-500 text-sm font-serif mt-2">{error}</p>
 
               <div className="mt-10">
                 <button type="submit" className="btn btn-soft btn-success">Login</button>

@@ -1,7 +1,26 @@
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import type { TypedUseSelectorHook } from "react-redux";
+import type { RootState } from "../store/Store";
+import axios from "axios";
+import { logout } from "../store/Slice";
 
 function Header() {
-  const navigate = useNavigate();
+  const typedUseSelectorHook: TypedUseSelectorHook<RootState> = useSelector;
+  const status = typedUseSelectorHook((state) => state.user.status);
+
+  const dispatch = useDispatch();
+
+  const logoutBtn = async () => {
+    const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/users/logout`, {
+      withCredentials: true
+    })
+
+    if (response.status === 200) {
+      console.log(response.data.data);
+      dispatch(logout());
+    }
+  }
 
   return (
     <div className="relative bg-base-100 w-full top-0 z-50">
@@ -39,10 +58,23 @@ function Header() {
             </ul>
           </div>
         </div> */}
-        <div className="gap-5 flex">
-          <Link to='/login' className="btn btn-outline btn-info">Login</Link>
-          <Link to='/signup' className="btn btn-outline btn-success">Signup</Link>
-        </div>
+        {!status && (
+          <div className="gap-5 flex">
+            <Link to="/login" className="btn btn-outline btn-info">
+              Login
+            </Link>
+            <Link to="/signup" className="btn btn-outline btn-success">
+              Signup
+            </Link>
+          </div>
+        )}
+        {status && (
+          <div className="gap-5 flex">
+            <Link onClick={() => logoutBtn()} to="/" className="btn btn-outline btn-info">
+              Logout
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

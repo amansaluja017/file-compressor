@@ -19,8 +19,6 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())
 
-connect();
-
 import userRoutes from "./routes/user.route";
 
 app.use("/", userRoutes);

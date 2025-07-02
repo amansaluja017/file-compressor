@@ -8,10 +8,15 @@ import {
   createRoutesFromElements,
 } from "react-router";
 import App from "./App.tsx";
-import LandingPage from "./pages/LandingPage.tsx";
-import LoginPage from "./pages/LoginPage.tsx";
-import SignupPage from "./pages/SignupPage.tsx";
-import HomePage from "./pages/HomePage.tsx";
+import {
+  HomePage,
+  LoginPage,
+  SignupPage,
+  LandingPage
+} from "./pages/index.ts"
+import { Provider } from "react-redux";
+import { store } from "./store/Store.ts";
+import { UserProtector } from "./components/index.ts";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -19,13 +24,19 @@ const router = createBrowserRouter(
       <Route index element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
-      <Route path="/home" element={<HomePage />} />
+      <Route path="/home" element={
+        <UserProtector>
+          <HomePage />
+        </UserProtector>
+      } />
     </Route>
   )
 );
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </StrictMode>
 );
