@@ -45,6 +45,11 @@ function Login() {
 
   return (
     <div className="h-full flex justify-center items-center">
+      {loading && (
+        <div className="absolute h-full w-1/2 flex justify-center backdrop-blur-xs items-center bg-opacity-50 z-50">
+          <span className="loading loading-dots loading-xl"></span>
+        </div>
+      )}
       <div className="p-8">
         <h1 className="font-bold text-3xl">
           Welcome back, good to see you again

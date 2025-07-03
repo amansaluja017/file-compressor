@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useRef, useState, type InputHTMLAttributes } from "react";
 import { useDispatch } from "react-redux";
 import { signup } from "../store/Slice";
 import { useNavigate } from "react-router";
@@ -10,11 +10,18 @@ function Signup() {
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
+  const acceptRef = useRef<HTMLInputElement | null>(null);
+  console.log(acceptRef.current?.checked);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const submit = async (data: any) => {
     try {
+      if (!acceptRef.current?.checked) {
+        setError("accept all terms and conditions");
+        return
+      }
       setLoading(true);
       const response = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/users/register`,
@@ -31,9 +38,11 @@ function Signup() {
       }
     } catch (error: any) {
       if (error.status === 402) {
-        setError("This email is already exists, please login or try different one");
+        setError(
+          "This email is already exists, please login or try different one"
+        );
       } else {
-        setError("Internal server error, please try again some time")
+        setError("Internal server error, please try again some time");
       }
       console.error("signup failed:", error);
     } finally {
@@ -43,6 +52,11 @@ function Signup() {
 
   return (
     <div className="h-full flex justify-center items-center">
+      {loading && (
+        <div className="absolute h-full w-1/2 flex justify-center backdrop-blur-xs items-center bg-opacity-50 z-50">
+          <span className="loading loading-dots loading-xl"></span>
+        </div>
+      )}
       <div className="p-8">
         <h1 className="font-bold text-3xl">
           Welcome back, good to see you again
@@ -98,7 +112,7 @@ function Signup() {
                   required: true,
                 })}
               />
-              <p className="validator-hint">
+              <p className="validator-hint hidden">
                 Must be more than 8 characters, including
                 <br />
                 At least one number
@@ -108,9 +122,20 @@ function Signup() {
                 At least one uppercase letter
               </p>
 
+              <div className="flex gap-2 mt-2 items-center">
+                <input
+                  ref={acceptRef}
+                  type="checkbox"
+                  className="checkbox size-4"
+                />
+                <p className="text-xs hover:underline">
+                  Accept all terms and conditions
+                </p>
+              </div>
+
               <p className="text-sm text-red-500 mb-2 font-serif">{error}</p>
 
-              <div className="">
+              <div className="mt-4">
                 <button type="submit" className="btn btn-soft btn-success">
                   signup
                 </button>

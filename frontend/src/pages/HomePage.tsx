@@ -1,8 +1,12 @@
-import React from 'react'
+import FileUploader from "../components/FileUploader"
 
 function HomePage() {
   return (
-    <div>HomePage</div>
+    <div className='h-screen'>
+      <div className='h-full flex items-center justify-center'>
+        <FileUploader />
+      </div>
+    </div>
   )
 }
 
