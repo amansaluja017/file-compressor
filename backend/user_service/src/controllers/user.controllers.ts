@@ -3,6 +3,7 @@ import asyncHandler from "../utils/asyncHandler";
 import { ApiError } from "../utils/ApiError";
 import { IUser, User } from "../models/user.models";
 import { ApiResponse } from "../utils/ApiResponse";
+import otpGernator from "otp-generator";
 
 const gernateAccessAndRefreshToken = async (user: IUser) => {
 
@@ -19,7 +20,7 @@ const gernateAccessAndRefreshToken = async (user: IUser) => {
     await user.save();
 
     return { accessToken, refreshToken };
-}
+};
 
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
@@ -91,4 +92,48 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
     }
 
     return res.status(200).clearCookie("accessToken").clearCookie("refreshToken").json(new ApiResponse(200, user, "user logout successfully"))
+});
+
+export const verifyUser = asyncHandler(async (req: Request, res: Response) => {
+    const {email} = req.body;
+
+    if (!email) {
+        throw new ApiError(404, "Please enter a email")
+    }
+
+    const user = await User.findOne({email});
+
+    if (!user) {
+        throw new ApiError(404, "user not found")
+    }
+
+    const otp = Number(otpGernator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false }));
+
+    if(!otp) {
+        throw new ApiError(500, "Internal server error, please try again after some time")
+    }
+
+    return res.status(200).json(new ApiResponse(200, {user, otp}, "otp send successfully"))
+});
+
+export const updatePassword = asyncHandler(async (req: Request, res: Response) => {
+    const {email, newPassword, confirmPassword} = req.body;
+
+    if (!newPassword && !confirmPassword) {
+        throw new ApiError(404, "Please enter new and confirm password")
+    }
+
+    if (newPassword !== confirmPassword) {
+        throw new ApiError(401, "new and confirm password should be same")
+    }
+
+    const user = await User.findOneAndUpdate({email}, {
+        password: confirmPassword
+    }, {new: true});
+
+    if (!user) {
+        throw new ApiError(500, "Internal server error")
+    }
+
+    return res.status(200).json(new ApiResponse(200, user, "password change successfully"))
 });

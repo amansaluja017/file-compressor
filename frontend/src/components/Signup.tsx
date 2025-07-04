@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useRef, useState, type InputHTMLAttributes } from "react";
 import { useDispatch } from "react-redux";
 import { signup } from "../store/Slice";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 function Signup() {
   const { register, handleSubmit } = useForm();
@@ -20,7 +20,7 @@ function Signup() {
     try {
       if (!acceptRef.current?.checked) {
         setError("accept all terms and conditions");
-        return
+        return;
       }
       setLoading(true);
       const response = await axios.post(
@@ -57,7 +57,7 @@ function Signup() {
           <span className="loading loading-dots loading-xl"></span>
         </div>
       )}
-      <div className="p-8">
+      <div className="p-8 w-full">
         <h1 className="font-bold text-3xl">
           Welcome back, good to see you again
         </h1>
@@ -142,6 +142,17 @@ function Signup() {
               </div>
             </div>
           </form>
+
+          <div className="text-sm">
+            <p>
+              Already have a account?{" "}
+              <Link
+                to="/login"
+                className="text-blue-500 cursor-pointer hover:underline">
+                Login
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

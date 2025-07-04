@@ -7,14 +7,14 @@ Cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET_API_KEY,
 });
 
-export const uploadImage = async (localFilePath: string) => {
+export const uploadImage = async (localFilePath: string, width: number, height: number) => {
   if (!localFilePath) return null;
 
   try {
     const upload = await Cloudinary.uploader.upload(localFilePath, {
       resourceType: "image",
       transformation: [
-        { width: 1000, crop: "fill" },
+        { width, height, crop: "scale" },
         { quality: "auto" },
         { fetch_format: "auto" }
       ]

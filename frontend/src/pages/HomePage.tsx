@@ -1,13 +1,11 @@
-import FileUploader from "../components/FileUploader"
+import { FileUploader } from "../components/index";
 
 function HomePage() {
   return (
-    <div className='h-screen'>
-      <div className='h-full flex items-center justify-center'>
-        <FileUploader />
-      </div>
+    <div className="h-screen">
+      <FileUploader />
     </div>
-  )
+  );
 }
 
-export default HomePage
+export default HomePage;

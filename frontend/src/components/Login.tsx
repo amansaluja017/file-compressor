@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "../store/Slice";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 function Login() {
   const { register, handleSubmit } = useForm();
@@ -50,7 +50,7 @@ function Login() {
           <span className="loading loading-dots loading-xl"></span>
         </div>
       )}
-      <div className="p-8">
+      <div className="p-8 w-full">
         <h1 className="font-bold text-3xl">
           Welcome back, good to see you again
         </h1>
@@ -98,6 +98,11 @@ function Login() {
               </div>
             </div>
           </form>
+
+          <div className="flex items-center justify-between text-sm">
+            <p>New user? <Link to="/signup" className="text-blue-500 cursor-pointer hover:underline">Register</Link></p>
+            <Link to="/forget-password" className="text-red-500 hover:underline cursor-pointer">Forget Password?</Link>
+          </div>
         </div>
       </div>
     </div>

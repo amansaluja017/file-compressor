@@ -34,15 +34,21 @@ export const userSlice = createSlice({
       sessionStorage.clear();
       sessionStorage.setItem("status", JSON.stringify(false))
     },
-    update: (state, action: PayloadAction<any>) => {
+    updateDetails: (state, action: PayloadAction<any>) => {
       state.userData = action.payload
       state.status = true
       sessionStorage.setItem("userData", JSON.stringify(action.payload))
       sessionStorage.setItem("status", JSON.stringify(true))
+    },
+    updatePassword: (state, action: PayloadAction<any>) => {
+      state.userData = action.payload
+      state.status = false
+      sessionStorage.setItem("userData", JSON.stringify(action.payload))
+      sessionStorage.setItem("status", JSON.stringify(false))
     }
   }
-})
+});
 
-export const { login, signup, logout, update } = userSlice.actions
+export const { login, signup, logout, updatePassword, updateDetails } = userSlice.actions;
 
-export default userSlice.reducer
+export default userSlice.reducer;

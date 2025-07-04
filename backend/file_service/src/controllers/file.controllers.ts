@@ -6,6 +6,7 @@ import { ApiResponse } from "../utils/ApiResponse";
 
 
 export const fileResizer = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const {height, width} = req.body;
 
     const files = req.files as { [key: string]: { path: string, size: number }[] };
     const localFilePath = files.file ? files.file[0].path : null;
@@ -18,7 +19,7 @@ export const fileResizer = asyncHandler(async (req: Request, res: Response, next
 
     console.log("local file path", localFilePath);
 
-    const resized_file = await uploadImage(localFilePath);
+    const resized_file = await uploadImage(localFilePath, width, height);
     console.log(resized_file)
 
     if (!resized_file) {
