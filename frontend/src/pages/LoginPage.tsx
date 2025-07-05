@@ -2,7 +2,7 @@ import Login from "../components/Login";
 
 function LoginPage() {
   return (
-    <div className="h-screen flex items-center justify-center">
+    <div className="h-screen flex items-center justify-center text-white bg-base-200">
       <div className="h-full w-1/2">
         <Login />
       </div>

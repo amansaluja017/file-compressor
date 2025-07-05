@@ -7,7 +7,7 @@ Cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET_API_KEY,
 });
 
-export const uploadImage = async (localFilePath: string, width: number, height: number) => {
+export const uploadImage = async (localFilePath: string, width: number, height: number, quality: number) => {
   if (!localFilePath) return null;
 
   try {
@@ -15,9 +15,41 @@ export const uploadImage = async (localFilePath: string, width: number, height: 
       resourceType: "image",
       transformation: [
         { width, height, crop: "scale" },
-        { quality: "auto" },
+        { quality },
         { fetch_format: "auto" }
       ]
+    });
+    fs.unlinkSync(localFilePath);
+    return upload.secure_url;
+  } catch (error) {
+    fs.unlinkSync(localFilePath);
+    console.error("failed to upload", error);
+  }
+};
+
+export const imageExtractor = async (localFilePath: string, items: any) => {
+  if (!localFilePath) return null;
+
+  try {
+    const upload = await Cloudinary.uploader.upload(localFilePath, {
+      resourceType: "image",
+      effect: `extract:items=${items}`
+    });
+    fs.unlinkSync(localFilePath);
+    return upload.secure_url;
+  } catch (error) {
+    fs.unlinkSync(localFilePath);
+    console.error("failed to upload", error);
+  }
+};
+
+export const backgroundChanger = async (localFilePath: string, prompt: string) => {
+  if (!localFilePath) return null;
+
+  try {
+    const upload = await Cloudinary.uploader.upload(localFilePath, {
+      resourceType: "image",
+      effect: `gen_background_replace:prompt_${prompt}`
     });
     fs.unlinkSync(localFilePath);
     return upload.secure_url;

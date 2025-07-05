@@ -26,14 +26,33 @@ function Header() {
   };
 
   return (
-    <div className="relative bg-base-100 w-full top-0 z-50">
+    <div className="relative bg-base-100 w-full top-0 z-50 text-white">
       <div className="navbar bg-transparent shadow-sm">
-        <div className="flex-1">
-          <a className="btn btn-ghost text-xl">Image modifier</a>
+        <div className="">
+          <a className="btn btn-ghost text-xl">IM</a>
         </div>
-        {status && (
-          <div className="flex gap-2">
-            <div className="dropdown dropdown-end">
+        {status ? (
+          <div className="flex gap-2 w-full">
+            <div className="w-full flex justify-center items-center">
+              <ul className="flex">
+                <li>
+                <Link to="/home" className="btn btn-ghost">
+                  Resizer
+                </Link>
+              </li>
+              <li>
+                <Link to="/backgroundChange" className="btn btn-ghost">
+                  Background changer
+                </Link>
+              </li>
+              <li>
+                <Link to="/extractor" className="btn btn-ghost">
+                  Items extractor
+                </Link>
+              </li>
+              </ul>
+            </div>
+            <div className="dropdown dropdown-end absolute right-4">
               <div
                 tabIndex={0}
                 role="button"
@@ -62,8 +81,7 @@ function Header() {
               </ul>
             </div>
           </div>
-        )}
-        {!status && (
+        ): (
           <div className="gap-5 flex">
             <Link to="/login" className="btn btn-outline btn-info">
               Login

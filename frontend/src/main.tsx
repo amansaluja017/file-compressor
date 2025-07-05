@@ -8,7 +8,7 @@ import {
   createRoutesFromElements,
 } from "react-router";
 import App from "./App.tsx";
-import { HomePage, LoginPage, SignupPage, LandingPage } from "./pages/index.ts";
+import { HomePage, LoginPage, SignupPage, LandingPage, ExtractorPage, BackgroundChangePage } from "./pages/index.ts";
 import { Provider } from "react-redux";
 import { store } from "./store/Store.ts";
 import { UserProtector } from "./components/index.ts";
@@ -29,6 +29,8 @@ const router = createBrowserRouter(
         }
       />
       <Route path="/forget-password" element={<ForgetPasswordPage />} />
+      <Route path="/extractor" element={<ExtractorPage />} />
+      <Route path="/backgroundChange" element={<BackgroundChangePage />} />
     </Route>
   )
 );

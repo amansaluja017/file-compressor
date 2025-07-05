@@ -5,6 +5,8 @@ import Signup from "./Signup"
 import UserProtector from "./UserProtector"
 import FileUploader from "./FileUploader"
 import ForgetPassword from "./ForgetPassword"
+import Extractor from "./Extractor"
+import BackgroundChange from "./backgroundChange"
 
 export {
     Header,
@@ -13,5 +15,7 @@ export {
     Signup,
     UserProtector,
     FileUploader,
-    ForgetPassword
+    ForgetPassword,
+    Extractor,
+    BackgroundChange
 };

@@ -4,6 +4,7 @@ import { ApiError } from "../utils/ApiError";
 import { IUser, User } from "../models/user.models";
 import { ApiResponse } from "../utils/ApiResponse";
 import otpGernator from "otp-generator";
+import { mailOptions } from "../nodemailer/nodemailerConfig";
 
 const gernateAccessAndRefreshToken = async (user: IUser) => {
 
@@ -113,6 +114,8 @@ export const verifyUser = asyncHandler(async (req: Request, res: Response) => {
         throw new ApiError(500, "Internal server error, please try again after some time")
     }
 
+    mailOptions(process.env.NODEMAILER_USER!, email, "image modifier", `Your otp(one time password) for create new password is ${otp}`)
+
     return res.status(200).json(new ApiResponse(200, {user, otp}, "otp send successfully"))
 });
 
@@ -127,13 +130,14 @@ export const updatePassword = asyncHandler(async (req: Request, res: Response) =
         throw new ApiError(401, "new and confirm password should be same")
     }
 
-    const user = await User.findOneAndUpdate({email}, {
-        password: confirmPassword
-    }, {new: true});
+    const user = await User.findOne({email});
 
     if (!user) {
         throw new ApiError(500, "Internal server error")
     }
+
+    user.password = confirmPassword;
+    await user.save();
 
     return res.status(200).json(new ApiResponse(200, user, "password change successfully"))
 });

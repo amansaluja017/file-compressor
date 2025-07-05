@@ -3,12 +3,12 @@ import FileSaver from "file-saver";
 import { useRef, useState, type FormEvent } from "react";
 import { useForm } from "react-hook-form";
 
-function FileUploader() {
+function Extractor() {
   const { register, handleSubmit } = useForm();
   const [loading, setLoading] = useState<boolean>(false);
   const [url, setUrl] = useState<string>("");
   const [oldUrl, setOldurl] = useState<string>("");
-  const [qualityValue, setQualityValue] = useState<number>(90);
+  const [extractItems, setExtactItems] = useState<string>("");
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -25,7 +25,7 @@ function FileUploader() {
     try {
       setLoading(true);
       const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/files/imageResize`,
+        `${import.meta.env.VITE_BASE_URL}/files/imageExtractor`,
         formData,
         {
           headers: {
@@ -84,11 +84,6 @@ function FileUploader() {
     e.preventDefault();
   };
 
-  const handleQualityValue = (e: FormEvent<HTMLLabelElement>) => {
-    const value = (e.target as HTMLInputElement).value;
-    setQualityValue(Number(value));
-  }
-
   return (
     <div className="h-screen flex flex-col items-center justify-center">
       {loading && (
@@ -140,38 +135,25 @@ function FileUploader() {
           )}
 
           <div className="flex flex-col gap-4 mt-20">
-            <label>
-              Width:
-              <input
-                type="number"
-                className="input input-bordered w-full max-w-xs"
-                {...register("width", { required: true })}
-                defaultValue={1000}
-              />
-            </label>
-            <label>
-              Height:
-              <input
-                type="number"
-                className="input input-bordered w-full max-w-xs"
-                {...register("height", { required: true })}
-                defaultValue={1000}
-              />
-            </label>
-
-            <label onChange={handleQualityValue} id="quality">
-              Quality: <span>{qualityValue}</span>
-              <input
-                type="range"
-                min={0}
-                max="100"
-                defaultValue={90}
-                className="range range-info"
-                {...register("quality", { required: true })}
-              />
-            </label>
+            <div>
+              <div
+                onChange={(e) => {
+                  const value = e.target as HTMLInputElement;
+                  setExtactItems(value.value);
+                }}>
+                <label htmlFor="extract">Type here items to extact</label>
+                <input
+                  id="extract"
+                  type="text"
+                  placeholder="eg: dog, boy"
+                  value={extractItems}
+                  className="input"
+                  {...register("items", { required: true })}
+                />
+              </div>
+            </div>
             <button type="submit" className="btn btn-primary w-full max-w-xs">
-              Resize Image
+              Extract Image
             </button>
           </div>
         </form>
@@ -180,4 +162,4 @@ function FileUploader() {
   );
 }
 
-export default FileUploader;
+export default Extractor;
