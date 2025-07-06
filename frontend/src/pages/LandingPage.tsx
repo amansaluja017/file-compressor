@@ -1,7 +1,7 @@
 
 function LandingPage() {
   return (
-    <div className="h-screen">
+    <div className="h-screen text-white bg-base-200">
       <div>
         <div className="p-10 flex justify-start items-center h-[25rem] relative">
           <h1 className="text-5xl font-bold">Welcome to Image Modifier</h1>

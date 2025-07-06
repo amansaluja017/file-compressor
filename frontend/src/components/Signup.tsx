@@ -59,7 +59,7 @@ function Signup() {
       )}
       <div className="p-8 w-full">
         <h1 className="font-bold text-3xl">
-          Welcome back, good to see you again
+          Hello
         </h1>
         <div className="h-full w-full rounded-md shadow-2xl mt-8 p-4">
           <div>

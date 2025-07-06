@@ -8,7 +8,14 @@ import {
   createRoutesFromElements,
 } from "react-router";
 import App from "./App.tsx";
-import { HomePage, LoginPage, SignupPage, LandingPage, ExtractorPage, BackgroundChangePage } from "./pages/index.ts";
+import {
+  HomePage,
+  LoginPage,
+  SignupPage,
+  LandingPage,
+  ExtractorPage,
+  BackgroundChangePage,
+} from "./pages/index.ts";
 import { Provider } from "react-redux";
 import { store } from "./store/Store.ts";
 import { UserProtector } from "./components/index.ts";
@@ -16,22 +23,26 @@ import { ForgetPasswordPage } from "./pages/index.ts";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}>
-      <Route index element={<LandingPage />} />
+    <>
+      <Route path="/" element={<App />}>
+        <Route index element={<LandingPage />} />
+
+        <Route
+          path="/home"
+          element={
+            <UserProtector>
+              <HomePage />
+            </UserProtector>
+          }
+        />
+        <Route path="/extractor" element={<ExtractorPage />} />
+        <Route path="/backgroundChange" element={<BackgroundChangePage />} />
+      </Route>
+
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
-      <Route
-        path="/home"
-        element={
-          <UserProtector>
-            <HomePage />
-          </UserProtector>
-        }
-      />
       <Route path="/forget-password" element={<ForgetPasswordPage />} />
-      <Route path="/extractor" element={<ExtractorPage />} />
-      <Route path="/backgroundChange" element={<BackgroundChangePage />} />
-    </Route>
+    </>
   )
 );
 

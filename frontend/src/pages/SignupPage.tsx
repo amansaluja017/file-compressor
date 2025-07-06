@@ -2,7 +2,7 @@ import Signup from "../components/Signup";
 
 function SignupPage() {
   return (
-    <div className="h-screen flex items-center justify-center">
+    <div className="h-screen flex items-center justify-center text-white bg-base-200">
       <div className="h-full w-1/2">
         <Signup />
       </div>
